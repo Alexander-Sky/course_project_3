@@ -4,7 +4,7 @@
 
 import logging
 from datetime import datetime
-from typing import Dict, List
+from typing import Optional, List, Dict
 
 from src.db_manager import DBManager
 from src.plane_api import PlaneAPI
@@ -99,8 +99,7 @@ class DataLoader:
             self.db.disconnect()
         return count
 
-    def load_all_countries_aeroplanes(
-        self, countries: Optional[List[str]] = None) -> Dict[str, int]:
+    def load_all_countries_aeroplanes(self, countries: Optional[List[str]] = None) -> Dict[str, int]:
         """
         Загружает самолёты для всех указанных стран.
         Возвращает словарь {страна: количество_самолётов}
