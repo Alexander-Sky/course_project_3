@@ -100,7 +100,7 @@ class DataLoader:
         return count
 
     def load_all_countries_aeroplanes(
-        self, countries: list = None) -> Dict[str, int]:
+        self, countries: Optional[List[str]] = None) -> Dict[str, int]:
         """
         Загружает самолёты для всех указанных стран.
         Возвращает словарь {страна: количество_самолётов}
@@ -114,7 +114,7 @@ class DataLoader:
             results[country] = count
         return results
 
-    def run_full_etl(self, countries: List[str] = None) -> Dict[str, int]:
+    def run_full_etl(self, countries: Optional[List[str]] = None) -> Dict[str, int]:
         """
         Выполняет полный ETL-процесс:
         1. Загружает страны
