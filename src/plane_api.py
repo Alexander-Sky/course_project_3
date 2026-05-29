@@ -3,8 +3,9 @@
 """
 
 import logging
+from typing import Any, Dict, List
+
 import requests
-from typing import List, Dict, Any
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,9 @@ class PlaneAPI:
         params = {"country": country, "format": "json", "limit": 1}
 
         try:
-            response = requests.get(self.openstreetmap_url, headers=headers, params=params, timeout=10)
+            response = requests.get(
+                self.openstreetmap_url, headers=headers, params=params, timeout=10
+            )
             response.raise_for_status()
             data = response.json()
             if data:
@@ -45,7 +48,7 @@ class PlaneAPI:
         }
 
         try:
-            response = requests.get(self.opensky_url, params=params, timeout=15)
+            response = requests.get(self.opensky_url, params=params, timeout=15)  # type: ignore
             response.raise_for_status()
             data = response.json()
             return data.get("states", [])

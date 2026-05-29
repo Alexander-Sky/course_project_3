@@ -6,8 +6,8 @@ import logging
 from datetime import datetime
 from typing import Dict, List
 
-from src.plane_api import PlaneAPI
 from src.db_manager import DBManager
+from src.plane_api import PlaneAPI
 
 logger = logging.getLogger(__name__)
 
@@ -30,13 +30,16 @@ class DataLoader:
         try:
             for country in countries:
                 bbox = self.api.get_country_bounds(country)
-                self.db.cur.execute("""
+                self.db.cur.execute(
+                    """
                     INSERT INTO countries (name, bounding_box, last_updated)
                     VALUES (%s, %s, %s)
                     ON CONFLICT (name) DO UPDATE
                     SET bounding_box = EXCLUDED.bounding_box,
                         last_updated = EXCLUDED.last_updated
-                """, (country, str(bbox), datetime.now()))
+                """,
+                    (country, str(bbox), datetime.now()),
+                )
                 logger.info(f"Страна '{country}' добавлена/обновлена")
             self.db.conn.commit()
         except Exception as e:
@@ -72,17 +75,20 @@ class DataLoader:
             for plane in aeroplanes:
                 if not plane or len(plane) < 10:
                     continue
-                self.db.cur.execute("""
+                self.db.cur.execute(
+                    """
                     INSERT INTO aeroplanes (icao24, callsign, origin_country, velocity, baro_altitude, country_id)
                     VALUES (%s, %s, %s, %s, %s, %s)
-                """, (
-                    plane[0],          # icao24
-                    plane[1],          # callsign
-                    plane[2],          # origin_country
-                    plane[9] if len(plane) > 9 else None,   # velocity
-                    plane[7] if len(plane) > 7 else None,   # baro_altitude
-                    country_id
-                ))
+                """,
+                    (
+                        plane[0],  # icao24
+                        plane[1],  # callsign
+                        plane[2],  # origin_country
+                        plane[9] if len(plane) > 9 else None,  # velocity
+                        plane[7] if len(plane) > 7 else None,  # baro_altitude
+                        country_id,
+                    ),
+                )
                 count += 1
             self.db.conn.commit()
             logger.info(f"Загружено {count} самолётов для страны '{country}'")
@@ -93,7 +99,8 @@ class DataLoader:
             self.db.disconnect()
         return count
 
-    def load_all_countries_aeroplanes(self, countries: List[str] = None) -> Dict[str, int]:
+    def load_all_countries_aeroplanes(
+        self, countries: list = None) -> Dict[str, int]:
         """
         Загружает самолёты для всех указанных стран.
         Возвращает словарь {страна: количество_самолётов}
