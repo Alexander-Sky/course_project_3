@@ -27,5 +27,17 @@ lint = [
     "pytest (>=9.0.3,<10.0.0)"
 ]
 dev = [
-    "pytest-cov (>=7.1.0,<8.0.0)"
+    "pytest-cov (>=7.1.0,<8.0.0)",
+    "types-psycopg2 (>=2.9.21.20260518,<3.0.0.0)"
 ]
+
+[tool.mypy]
+disallow_untyped_defs = true
+warn_return_any = true
+exclude = 'venv'
+ignore_errors = true
+
+# Игнорируем проверку plane_api.py (проблемы с типизацией requests)
+[[tool.mypy.overrides]]
+module = "src.plane_api"
+ignore_errors = true
